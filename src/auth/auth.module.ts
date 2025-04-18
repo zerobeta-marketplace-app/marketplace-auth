@@ -1,9 +1,10 @@
 // src/auth/auth.module.ts
-import { Module } from '@nestjs/common';
+import { Inject, Module } from '@nestjs/common';
 import { AuthService } from '../auth/services/auth.service';
 import { AuthController } from '../auth/controllers/auth.controller';
 import { JwtModule } from '@nestjs/jwt';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ClientKafka, ClientsModule, Transport } from '@nestjs/microservices';
+import { ConsumerService } from 'src/kafka/consumer.interfaces';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         transport: Transport.KAFKA,
         options: {
           client: {
+            clientId: 'auth-client',
             brokers: ['kafka:29092'],
           },
           consumer: {
@@ -27,6 +29,13 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     ]),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, ConsumerService],
 })
-export class AuthModule {}
+export class AuthModule {
+  constructor(@Inject('USER_SERVICE') private readonly userClient: ClientKafka) {}
+
+  async onModuleInit() {
+    this.userClient.subscribeToResponseOf('get-user-by-email');
+    await this.userClient.connect();
+  }
+}
