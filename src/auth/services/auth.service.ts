@@ -28,7 +28,7 @@ export class AuthService {
 
       const user = response.data;
 
-      this.logger.log(`✅ User retrieved: ${user.email}`);
+      this.logger.log(` User retrieved: ${user.email}`);
 
       if (!user || !user.password) {
         throw new UnauthorizedException('User not found or invalid structure');
@@ -42,7 +42,7 @@ export class AuthService {
       return user;
 
     } catch (error) {
-      this.logger.error(`❌ Auth error: ${error.message}`);
+      this.logger.error(` Auth error: ${error.message}`);
       throw new UnauthorizedException('Authentication failed');
     }
   }

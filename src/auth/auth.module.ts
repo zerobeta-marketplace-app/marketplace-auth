@@ -9,7 +9,7 @@ import { ConsumerService } from 'src/kafka/consumer.interfaces';
 @Module({
   imports: [
     JwtModule.register({
-      secret: process.env.JWT_SECRET || 'my-secret',
+      secret: process.env.JWT_SECRET || 'beta_marketplace',
       signOptions: { expiresIn: '1h' },
     }),
     ClientsModule.register([
