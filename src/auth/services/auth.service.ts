@@ -17,7 +17,7 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, password: string) {
-    this.logger.log(`🔐 Validating user with email: ${email}`);
+    this.logger.log(` Validating user with email: ${email}`);
 
     try {
       // const response = await axios.get<UserResponseDto>(
